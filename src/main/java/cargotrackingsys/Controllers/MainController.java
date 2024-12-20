@@ -11,7 +11,7 @@ import java.util.LinkedList;
 
 public class MainController {
 
-    private LinkedList<Customer> customerList;  // List to store customers
+    private LinkedList<Customer> customerList;
     private Shipment shipment;
     private CustomerView customerView;
     private CargoView cargoView;
@@ -30,6 +30,12 @@ public class MainController {
             }
         });
 
+        this.customerView.getCustomerListArea().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                displaySelectedCustomerDetails();
+            }
+        });
+
         this.cargoView.getUpdateButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -38,41 +44,26 @@ public class MainController {
         });
 
         // Initialize views with existing data
-        updateCustomerListDisplay();
+        customerView.updateCustomerList(customerList);  // Update with the current customer list
         cargoView.displayShipmentInfo(shipment.getShipmentId(), shipment.getStatus());
     }
 
+    // Method to add a new customer
     private void addNewCustomer() {
         // Get the customer data from the view
         int customerId = customerView.getCustomerId();
         String name = customerView.getName();
 
-        // Create new customer and add it to the list
+        // Create a new customer and add it to the list
         Customer newCustomer = new Customer(customerId, name.split(" ")[0], name.split(" ")[1]);
         customerList.add(newCustomer);
 
         // Update the customer display in the view
-        customerView.updateCustomerList();
+        customerView.updateCustomerList(customerList);
         customerView.clearInputFields();  // Clear the input fields after adding
     }
 
-    private void updateCustomerInfo() {
-        int customerId = customerView.getCustomerId();
-        String name = customerView.getName();
-
-        // Search for the customer in the list and update their information
-        for (Customer customer : customerList) {
-            if (customer.getCustomerId() == customerId) {
-                customer.setName(name);
-                break;
-            }
-        }
-
-        // Update the view with the new customer data
-        customerView.updateCustomerList();
-        customerView.clearInputFields();
-    }
-
+    // Method to handle the update of shipment info
     private void updateShipmentInfo() {
         int shipmentId = cargoView.getShipmentId();
         String status = cargoView.getStatus();
@@ -88,8 +79,14 @@ public class MainController {
         cargoView.clearInputFields();
     }
 
-    // Utility method to update the customer list in the view
-    private void updateCustomerListDisplay() {
-        customerView.updateCustomerList();
+    // Method to display details of the selected customer
+    private void displaySelectedCustomerDetails() {
+        // Get the selected customer from the JList
+        Customer selectedCustomer = customerView.getSelectedCustomer();
+
+        if (selectedCustomer != null) {
+            // Show customer details in the text fields or other areas
+            customerView.displayCustomerDetails(selectedCustomer);
+        }
     }
 }

@@ -31,7 +31,7 @@ public class CustomerController {
         customerList.add(newCustomer);
 
         // Update the customer list in the view
-        view.updateCustomerList();
+        view.updateCustomerList(customerList);
     }
 }
 
