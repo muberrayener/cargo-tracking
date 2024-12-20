@@ -2,30 +2,31 @@ package cargotrackingsys.Controllers;
 
 import cargotrackingsys.Models.Customer;
 import cargotrackingsys.Models.Shipment;
-import cargotrackingsys.Views.CargoView;
 import cargotrackingsys.Views.CustomerView;
+import cargotrackingsys.Views.CargoView;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.LinkedList;
 
 public class MainController {
 
-    private Customer customer;
+    private LinkedList<Customer> customerList;  // List to store customers
     private Shipment shipment;
     private CustomerView customerView;
     private CargoView cargoView;
 
-    public MainController(Customer customer, Shipment shipment, CustomerView customerView, CargoView cargoView) {
-        this.customer = customer;
+    public MainController(LinkedList<Customer> customerList, Shipment shipment, CustomerView customerView, CargoView cargoView) {
+        this.customerList = customerList;
         this.shipment = shipment;
         this.customerView = customerView;
         this.cargoView = cargoView;
 
         // Set up action listeners for both views
-        this.customerView.getUpdateButton().addActionListener(new ActionListener() {
+        this.customerView.getAddCustomerButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                updateCustomerInfo();
+                addNewCustomer();
             }
         });
 
@@ -37,22 +38,38 @@ public class MainController {
         });
 
         // Initialize views with existing data
-        customerView.displayCustomerInfo(customer.getCustomerId(), customer.getName());
+        updateCustomerListDisplay();
         cargoView.displayShipmentInfo(shipment.getShipmentId(), shipment.getStatus());
+    }
+
+    private void addNewCustomer() {
+        // Get the customer data from the view
+        int customerId = customerView.getCustomerId();
+        String name = customerView.getName();
+
+        // Create new customer and add it to the list
+        Customer newCustomer = new Customer(customerId, name.split(" ")[0], name.split(" ")[1]);
+        customerList.add(newCustomer);
+
+        // Update the customer display in the view
+        customerView.updateCustomerList();
+        customerView.clearInputFields();  // Clear the input fields after adding
     }
 
     private void updateCustomerInfo() {
         int customerId = customerView.getCustomerId();
         String name = customerView.getName();
 
-        // Update the customer model with new data
-        customer.setCustomerId(customerId);
-        customer.setName(name);
+        // Search for the customer in the list and update their information
+        for (Customer customer : customerList) {
+            if (customer.getCustomerId() == customerId) {
+                customer.setName(name);
+                break;
+            }
+        }
 
-        // Update the view with new customer data
-        customerView.displayCustomerInfo(customer.getCustomerId(), customer.getName());
-
-        // Clear the input fields
+        // Update the view with the new customer data
+        customerView.updateCustomerList();
         customerView.clearInputFields();
     }
 
@@ -69,5 +86,10 @@ public class MainController {
 
         // Clear the input fields
         cargoView.clearInputFields();
+    }
+
+    // Utility method to update the customer list in the view
+    private void updateCustomerListDisplay() {
+        customerView.updateCustomerList();
     }
 }

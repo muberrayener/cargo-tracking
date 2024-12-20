@@ -1,76 +1,95 @@
 package cargotrackingsys.Views;
 
 import cargotrackingsys.MainScreen;
+import cargotrackingsys.Models.Customer;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
+import java.util.LinkedList;
 
 public class CustomerView {
-
-    private JFrame customerFrame;
+    private JFrame frame;
     private JTextField customerIdField;
-    private JTextField customerNameField;
-    private JButton updateButton;
+    private JTextField nameField;
+    private JTextArea customerListArea;  // To display the list of customers
+    private JButton addCustomerButton;
     private JButton backButton;
-    private JTextArea displayArea;  // For displaying customer information
+    private LinkedList<Customer> customerList;  // Linked list to hold customer objects
 
     public CustomerView() {
-        // Initialize the customer view frame
-        customerFrame = new JFrame("Customer Information");
-        customerFrame.setSize(400, 300);
-        customerFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        customerFrame.setLayout(new BorderLayout());
+        // Initialize customer list
+        customerList = new LinkedList<>();
 
-        // Create a panel for input fields and buttons
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(3, 2));  // 3 rows, 2 columns
+        // Setup JFrame for the CustomerView
+        frame = new JFrame("Customer Management");
+        frame.setSize(500, 400);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLayout(new BorderLayout());
 
-        // Add input fields and labels for Customer details
-        panel.add(new JLabel("Customer ID:"));
-        customerIdField = new JTextField(15);
-        panel.add(customerIdField);
+        // Input Panel
+        JPanel inputPanel = new JPanel();
+        inputPanel.setLayout(new GridLayout(3, 2));  // 3 rows, 2 columns
 
-        panel.add(new JLabel("Customer Name:"));
-        customerNameField = new JTextField(15);
-        panel.add(customerNameField);
+        inputPanel.add(new JLabel("Customer ID:"));
+        customerIdField = new JTextField();
+        inputPanel.add(customerIdField);
 
-        // Update button
-        updateButton = new JButton("Update Customer");
-        panel.add(updateButton);
+        inputPanel.add(new JLabel("Full Name (First Last):"));
+        nameField = new JTextField();
+        inputPanel.add(nameField);
 
-        // Back button to return to the main screen
+        addCustomerButton = new JButton("Add Customer");
+        inputPanel.add(addCustomerButton);
+
         backButton = new JButton("Back to Main Screen");
-        panel.add(backButton);
+        inputPanel.add(backButton);
 
-        // Display Area (for customer info)
-        displayArea = new JTextArea();
-        displayArea.setEditable(false);
-        displayArea.setPreferredSize(new Dimension(400, 150));
-        customerFrame.add(panel, BorderLayout.NORTH);
-        customerFrame.add(new JScrollPane(displayArea), BorderLayout.CENTER);
+        frame.add(inputPanel, BorderLayout.NORTH);
 
-        // Make the customer view frame visible
-        customerFrame.setVisible(true);
+        // Customer List Area
+        customerListArea = new JTextArea();
+        customerListArea.setEditable(false);
+        JScrollPane scrollPane = new JScrollPane(customerListArea);
+        frame.add(scrollPane, BorderLayout.CENTER);
+
+        // Make frame visible
+        frame.setVisible(true);
+
+        // Button functionality
         addButtonFunctionality();
     }
 
+    // Method to update the display area with the current list of customers
+    public void updateCustomerList() {
+        customerListArea.setText("");  // Clear the text area
+        for (Customer customer : customerList) {
+            customerListArea.append("ID: " + customer.getCustomerId() + ", Name: " + customer.getName() + "\n");
+        }
+    }
+
+    // Action listener functionality for buttons
     private void addButtonFunctionality() {
-        // Action listener for the update button
-        updateButton.addActionListener(new ActionListener() {
+        addCustomerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Retrieve shipment data from the text fields
-                int customerId = getCustomerId();
-                String name = getName();
+                // Get customer data from the input fields
+                int customerId = Integer.parseInt(customerIdField.getText());
+                String name = nameField.getText();
 
-                // Display the updated shipment information
-                displayCustomerInfo(customerId, name);
+                // Create a new Customer object
+                Customer newCustomer = new Customer(customerId, name.split(" ")[0], name.split(" ")[1]);
 
-                // Clear the input fields
-                clearInputFields();
+                // Add to the customer list
+                customerList.add(newCustomer);
+
+                // Update the display of customers in the list
+                updateCustomerList();
+
+                // Clear the input fields after adding
+                customerIdField.setText("");
+                nameField.setText("");
             }
         });
 
@@ -79,7 +98,7 @@ public class CustomerView {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Hide the CargoView
-                customerFrame.setVisible(false);
+                frame.setVisible(false);
 
                 // Return to the MainScreen
                 new MainScreen();  // This will display the MainScreen
@@ -87,38 +106,33 @@ public class CustomerView {
         });
     }
 
-    // Method to display customer information in the view
-    public void displayCustomerInfo(int customerId, String name) {
-        displayArea.setText("Customer ID: " + customerId + "\nName: " + name);
+    // Getter for the Add Customer button
+    public JButton getAddCustomerButton() {
+        return addCustomerButton;
     }
 
-    // Method to clear the input fields after update
+    public JTextField getCustomerIdField() {
+        return customerIdField;
+    }
+
+    public JTextField getNameField() {
+        return nameField;
+    }
+
+    public JTextArea getCustomerListArea() {
+        return customerListArea;
+    }
+
     public void clearInputFields() {
         customerIdField.setText("");
-        customerNameField.setText("");
+        nameField.setText("");
     }
 
-    // Getters for customer ID and customer name
     public int getCustomerId() {
-        return Integer.parseInt(customerIdField.getText()); // Assuming ID is a number
+        return Integer.parseInt(customerIdField.getText());
     }
 
     public String getName() {
-        return customerNameField.getText();
-    }
-
-    // Get the update button
-    public JButton getUpdateButton() {
-        return updateButton;
-    }
-
-    // Get the back button
-    public JButton getBackButton() {
-        return backButton;
-    }
-
-    // Main method to test the CustomerView directly
-    public static void main(String[] args) {
-        new CustomerView();  // Open CustomerView on its own if needed
+        return nameField.getText();
     }
 }

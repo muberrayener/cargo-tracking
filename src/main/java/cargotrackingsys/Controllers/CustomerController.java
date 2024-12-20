@@ -6,41 +6,32 @@ import cargotrackingsys.Views.CustomerView;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.LinkedList;
 
 public class CustomerController {
-
-    private Customer customer;
     private CustomerView view;
+    private LinkedList<Customer> customerList;
 
-    public CustomerController(Customer customer, CustomerView view) {
-        this.customer = customer;
+    public CustomerController(CustomerView view) {
         this.view = view;
-
-        // Set up the update button listener
-        this.view.getUpdateButton().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                updateCustomerInfo();
-            }
-        });
-
-        // Display initial customer information
-        view.displayCustomerInfo(customer.getCustomerId(), customer.getName());
+        this.customerList = new LinkedList<>();
     }
 
-    // Method to update customer information when the button is clicked
-    private void updateCustomerInfo() {
-        int customerId = view.getCustomerId();
-        String name = view.getName();
+    // Method to add a customer and update the view
+    public void addCustomer(int customerId, String name) {
+        // Split name into first and last name
+        String[] nameParts = name.split(" ");
+        String firstName = nameParts[0];
+        String lastName = nameParts[1];
 
-        // Update the customer model with the new values
-        customer.setCustomerId(customerId);
-        customer.setName(name);
+        // Create a new Customer object
+        Customer newCustomer = new Customer(customerId, firstName, lastName);
 
-        // Update the view with the new customer data
-        view.displayCustomerInfo(customer.getCustomerId(), customer.getName());
+        // Add the customer to the list
+        customerList.add(newCustomer);
 
-        // Clear the input fields after update
-        view.clearInputFields();
+        // Update the customer list in the view
+        view.updateCustomerList();
     }
 }
+
