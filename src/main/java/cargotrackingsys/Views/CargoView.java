@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.LinkedList;
 
 public class CargoView {
 
@@ -17,9 +18,11 @@ public class CargoView {
     private JButton updateButton;
     private JButton backButton;
     private JTextArea displayArea;  // For displaying shipment information
+    public LinkedList<Customer> customerList;
 
-    public CargoView() {
+    public CargoView(LinkedList<Customer> customerList) {
         // Initialize the Cargo view frame
+        this.customerList = customerList;
         cargoFrame = new JFrame("Cargo Information");
         cargoFrame.setSize(400, 300);
         cargoFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -54,7 +57,7 @@ public class CargoView {
         cargoFrame.add(new JScrollPane(displayArea), BorderLayout.CENTER);
 
         // Make the Cargo view frame visible
-        cargoFrame.setVisible(true);
+        cargoFrame.setVisible(false);
 
         // Adding functionality to buttons
         addButtonFunctionality();
@@ -80,13 +83,14 @@ public class CargoView {
 
         // Action listener for the back button
         backButton.addActionListener(new ActionListener() {
+
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Hide the CargoView
                 cargoFrame.setVisible(false);
 
                 // Return to the MainScreen
-                new MainScreen();  // This will display the MainScreen
+                new MainScreen(customerList);  // This will display the MainScreen
             }
         });
     }
@@ -126,12 +130,11 @@ public class CargoView {
         return cargoFrame;
     }
 
-    // Main method to test the CargoView directly
-    public static void main(String[] args) {
-        new CargoView();  // Open CargoView on its own if needed
-    }
-
     public String getStatus() {
         return shipmentStatusField.getText();
+    }
+
+    public void setVisibility (boolean visible) {
+        cargoFrame.setVisible(visible);
     }
 }

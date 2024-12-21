@@ -22,10 +22,11 @@ public class CustomerView {
     private LinkedList<Customer> customerList;
     private DefaultListModel<Customer> customerListModel;  // Linked list to hold customer objects
 
-    public CustomerView() {
+    public CustomerView(LinkedList<Customer> customerList) {
         // Initialize customer list
-        customerList = new LinkedList<>();
+        this.customerList = customerList;
         customerListModel = new DefaultListModel<>();
+        updateCustomerList(this.customerList);
         // Setup JFrame for the CustomerView
         frame = new JFrame("Customer Management");
         frame.setSize(500, 400);
@@ -71,7 +72,7 @@ public class CustomerView {
         frame.add(detailsPanel, BorderLayout.SOUTH);
 
         // Make frame visible
-        frame.setVisible(true);
+        frame.setVisible(false);
 
         // Button functionality
         addButtonFunctionality();
@@ -128,7 +129,7 @@ public class CustomerView {
                 frame.setVisible(false);
 
                 // Return to the MainScreen
-                new MainScreen();  // This will display the MainScreen
+                new MainScreen(customerList);  // This will display the MainScreen
             }
         });
 
@@ -200,5 +201,9 @@ public class CustomerView {
 
     public String getName() {
         return nameField.getText();
+    }
+
+    public void setVisibility (boolean visible) {
+        frame.setVisible(visible);
     }
 }
