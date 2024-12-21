@@ -13,8 +13,9 @@ import java.awt.event.MouseEvent;
 
 public class CustomerView {
     private JFrame frame;
-    private JTextField customerIdField;
     private JTextField nameField;
+    private JTextField rCityField;
+    private JTextField sCityField;
     private JList<Customer> customerListArea;  // To display the list of customers
     private JButton addCustomerButton;
     private JButton backButton;
@@ -35,15 +36,20 @@ public class CustomerView {
 
         // Input Panel
         JPanel inputPanel = new JPanel();
-        inputPanel.setLayout(new GridLayout(3, 2));  // 3 rows, 2 columns
+        inputPanel.setLayout(new GridLayout(4, 2));  // 3 rows, 2 columns
 
-        inputPanel.add(new JLabel("Customer ID:"));
-        customerIdField = new JTextField();
-        inputPanel.add(customerIdField);
 
         inputPanel.add(new JLabel("Full Name (First Last):"));
         nameField = new JTextField();
         inputPanel.add(nameField);
+
+        inputPanel.add(new JLabel("Sender City"));
+        sCityField= new JTextField();
+        inputPanel.add(sCityField);
+
+        inputPanel.add(new JLabel("Receiver City"));
+        rCityField= new JTextField();
+        inputPanel.add(rCityField);
 
         addCustomerButton = new JButton("Add Customer");
         inputPanel.add(addCustomerButton);
@@ -94,7 +100,7 @@ public class CustomerView {
             public void actionPerformed(ActionEvent e) {
                 // Get customer data from the input fields
                 try {
-                    int customerId = Integer.parseInt(customerIdField.getText());
+                    int customerId = customerList.size()+1;
                     String name = nameField.getText();
 
                     if (name.trim().isEmpty() || customerId <= 0) {
@@ -112,9 +118,7 @@ public class CustomerView {
                     updateCustomerList(customerList);
 
                     // Clear the input fields after adding
-                    customerIdField.setText("");
                     nameField.setText("");
-                    customerIdField.requestFocus();  // Focus on Customer ID for the next entry
                 } catch (NumberFormatException ex) {
                     JOptionPane.showMessageDialog(frame, "Customer ID must be a valid number.");
                 }
@@ -133,7 +137,6 @@ public class CustomerView {
             }
         });
 
-        // Action listener for the "View Details" button
         viewDetailsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -148,7 +151,6 @@ public class CustomerView {
         });
     }
 
-    // Add a MouseListener to the customer list to allow selection of customers
     private void addListSelectionListener() {
         customerListArea.addMouseListener(new MouseAdapter() {
             @Override
@@ -163,19 +165,14 @@ public class CustomerView {
         });
     }
 
-    // Display selected customer's details in the fields
-    public void displayCustomerDetails(Customer customer) {
-        customerIdField.setText(String.valueOf(customer.getCustomerId()));
-        nameField.setText(customer.getName());
-    }
-
     // Getter for the Add Customer button
     public JButton getAddCustomerButton() {
         return addCustomerButton;
     }
 
-    public JTextField getCustomerIdField() {
-        return customerIdField;
+
+    public void displayCustomerDetails(Customer customer) {
+        nameField.setText(customer.getName());
     }
 
     public JTextField getNameField() {
@@ -187,7 +184,6 @@ public class CustomerView {
     }
 
     public void clearInputFields() {
-        customerIdField.setText("");
         nameField.setText("");
     }
 
@@ -196,7 +192,7 @@ public class CustomerView {
     }
 
     public int getCustomerId() {
-        return Integer.parseInt(customerIdField.getText());
+        return customerList.size()+1;
     }
 
     public String getName() {
@@ -205,5 +201,14 @@ public class CustomerView {
 
     public void setVisibility (boolean visible) {
         frame.setVisible(visible);
+    }
+
+    public JButton getViewDetailsButton() {
+        return viewDetailsButton;
+    }
+
+    public JFrame getFrame() {
+            return frame;
+
     }
 }
