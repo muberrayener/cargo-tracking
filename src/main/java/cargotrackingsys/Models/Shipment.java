@@ -6,15 +6,26 @@ public class Shipment implements Comparable<Shipment> {
     int shipmentId;
     Date shipmentDate;
     String status;
-    public int deliveryTime; // in days
+    public int deliveryTime;
+    public City startCity;
+    public City endCity;
 
-    // Constructor
+    public Shipment(int shipmentId, Date shipmentDate, String status, int deliveryTime,City startCity, City endCity ) {
+        this.shipmentId = shipmentId;
+        this.shipmentDate = shipmentDate;
+        this.status = status;
+        this.deliveryTime = deliveryTime;
+        this.startCity = startCity;
+        this.endCity = endCity;
+    }
+
     public Shipment(int shipmentId, Date shipmentDate, String status, int deliveryTime) {
         this.shipmentId = shipmentId;
         this.shipmentDate = shipmentDate;
         this.status = status;
         this.deliveryTime = deliveryTime;
     }
+    public Shipment(){}
 
     public int getShipmentId(){
         return shipmentId;
@@ -32,6 +43,26 @@ public class Shipment implements Comparable<Shipment> {
 
     public String getStatus() {
         return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public City getStartCity() {
+        return startCity;
+    }
+
+    public City getEndCity() {
+        return endCity;
+    }
+
+    public void setStartCity(City startCity) {
+        this.startCity = startCity;
+    }
+
+    public void setEndCity(City endCity) {
+        this.endCity = endCity;
     }
 
     public void displayShipment() {

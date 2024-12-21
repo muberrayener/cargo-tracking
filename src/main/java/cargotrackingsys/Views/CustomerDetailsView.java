@@ -8,39 +8,42 @@ public class CustomerDetailsView {
     private JFrame detailsFrame;
     private JLabel customerIdLabel;
     private JLabel nameLabel;
+    private JLabel cargoLabel;
     private JTextField customerIdField;
     private JTextField nameField;
+    private JTextField cargoField;
     private JButton closeButton;
 
     public CustomerDetailsView(Customer customer) {
-        // Initialize the details frame
         detailsFrame = new JFrame("Customer Details");
         detailsFrame.setSize(400, 300);
-        detailsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);  // Close the details window only
-        detailsFrame.setLayout(new GridLayout(3, 2));  // Layout with 3 rows, 2 columns
+        detailsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        detailsFrame.setLayout(new GridLayout(4, 2));
 
-        // Customer ID and Name labels
         customerIdLabel = new JLabel("Customer ID:");
         customerIdField = new JTextField(String.valueOf(customer.getCustomerId()));
-        customerIdField.setEditable(false);  // Make the customer ID field non-editable
+        customerIdField.setEditable(false);
 
         nameLabel = new JLabel("Full Name:");
         nameField = new JTextField(customer.getName());
-        nameField.setEditable(false);  // Make the name field non-editable
+        nameField.setEditable(false);
 
-        // Close button to close the details screen
+        cargoLabel = new JLabel("Cargo ID");
+        cargoField = new JTextField(customer.getShipmentHistory().size());
+        cargoField.setEditable(false);
+
         closeButton = new JButton("Close");
-        closeButton.addActionListener(e -> detailsFrame.dispose());  // Close the details screen
+        closeButton.addActionListener(e -> detailsFrame.dispose());
 
-        // Add components to the frame
         detailsFrame.add(customerIdLabel);
         detailsFrame.add(customerIdField);
         detailsFrame.add(nameLabel);
         detailsFrame.add(nameField);
-        detailsFrame.add(new JLabel(""));  // Empty label for spacing
+        detailsFrame.add(cargoLabel);
+        detailsFrame.add(cargoField);
+        detailsFrame.add(new JLabel(""));
         detailsFrame.add(closeButton);
 
-        // Make the details frame visible
         detailsFrame.setVisible(true);
     }
 }

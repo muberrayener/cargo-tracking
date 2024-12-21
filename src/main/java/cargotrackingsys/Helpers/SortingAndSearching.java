@@ -6,7 +6,6 @@ import java.util.Arrays;
 
 class SortingAndSearching {
 
-    // Binary Search for completed shipments
     public static Shipment binarySearch(Shipment[] shipments, int shipmentId) {
         int left = 0, right = shipments.length - 1;
         while (left <= right) {
@@ -22,7 +21,6 @@ class SortingAndSearching {
         return null; // Not found
     }
 
-    // Merge Sort for undelivered shipments based on delivery time
     public static void mergeSort(Shipment[] shipments) {
         if (shipments.length <= 1) return;
 

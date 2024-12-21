@@ -10,7 +10,6 @@ class ShipmentHistory {
         stack = new Stack<>();
     }
 
-    // Add a new shipment to the stack
     public void addShipment(Shipment shipment) {
         if (stack.size() == 5) {
             stack.pop();  // Remove the oldest shipment if more than 5
@@ -18,7 +17,6 @@ class ShipmentHistory {
         stack.push(shipment);
     }
 
-    // Display the last 5 shipments
     public void displayRecentShipments() {
         if (stack.isEmpty()) {
             System.out.println("No shipments to display.");

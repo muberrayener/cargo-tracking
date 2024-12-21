@@ -5,9 +5,8 @@ public class Customer {
     int customerId;
     String firstName;
     String lastName;
-    LinkedList<Shipment> shipmentHistory;  // LinkedList to store the shipment history
+    LinkedList<Shipment> shipmentHistory;
 
-    // Constructor
     public Customer(int customerId, String firstName, String lastName) {
         this.customerId = customerId;
         this.firstName = firstName;
@@ -15,16 +14,15 @@ public class Customer {
         this.shipmentHistory = new LinkedList<>();
     }
 
-    // Method to add shipment while maintaining sorted order based on shipmentDate
     public void addShipment(Shipment shipment) {
         int index = 0;
         while (index < shipmentHistory.size() && shipmentHistory.get(index).shipmentDate.before(shipment.shipmentDate)) {
             index++;
         }
         shipmentHistory.add(index, shipment);
+        System.out.println(shipment.status);
     }
 
-    // Display customer shipment history
     public void displayShipmentHistory() {
         for (Shipment shipment : shipmentHistory) {
             System.out.println("Shipment ID: " + shipment.shipmentId + ", Date: " + shipment.shipmentDate + ", Status: " + shipment.status + ", Delivery Time: " + shipment.deliveryTime);
@@ -37,6 +35,10 @@ public class Customer {
 
     public String getName() {
         return firstName + " " + lastName;
+    }
+
+    public LinkedList<Shipment> getShipmentHistory() {
+        return this.shipmentHistory;
     }
 
     public void setCustomerId(int customerId) {

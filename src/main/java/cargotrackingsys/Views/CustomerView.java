@@ -1,12 +1,17 @@
 package cargotrackingsys.Views;
 
 import cargotrackingsys.MainScreen;
+import cargotrackingsys.Models.City;
 import cargotrackingsys.Models.Customer;
+import cargotrackingsys.Models.Shipment;
 
+import java.time.LocalDateTime;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.LinkedList;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -16,40 +21,38 @@ public class CustomerView {
     private JTextField nameField;
     private JTextField rCityField;
     private JTextField sCityField;
-    private JList<Customer> customerListArea;  // To display the list of customers
+    private JList<Customer> customerListArea;
     private JButton addCustomerButton;
     private JButton backButton;
     private JButton viewDetailsButton;
     private LinkedList<Customer> customerList;
-    private DefaultListModel<Customer> customerListModel;  // Linked list to hold customer objects
-
+    private DefaultListModel<Customer> customerListModel;
+    private JComboBox<String> rCityComboBox;
+    private JComboBox<String> sCityComboBox;
+    private static String[] cities = { "Istanbul", "Ankara", "Izmir", "Antalya", "Bursa", "Adana" };
     public CustomerView(LinkedList<Customer> customerList) {
-        // Initialize customer list
         this.customerList = customerList;
         customerListModel = new DefaultListModel<>();
         updateCustomerList(this.customerList);
-        // Setup JFrame for the CustomerView
         frame = new JFrame("Customer Management");
         frame.setSize(500, 400);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
 
-        // Input Panel
         JPanel inputPanel = new JPanel();
         inputPanel.setLayout(new GridLayout(4, 2));  // 3 rows, 2 columns
-
 
         inputPanel.add(new JLabel("Full Name (First Last):"));
         nameField = new JTextField();
         inputPanel.add(nameField);
 
         inputPanel.add(new JLabel("Sender City"));
-        sCityField= new JTextField();
-        inputPanel.add(sCityField);
+        sCityComboBox = new JComboBox<>(cities);
+        inputPanel.add(sCityComboBox);
 
         inputPanel.add(new JLabel("Receiver City"));
-        rCityField= new JTextField();
-        inputPanel.add(rCityField);
+        rCityComboBox = new JComboBox<>(cities);
+        inputPanel.add(rCityComboBox);
 
         addCustomerButton = new JButton("Add Customer");
         inputPanel.add(addCustomerButton);
@@ -59,8 +62,7 @@ public class CustomerView {
 
         frame.add(inputPanel, BorderLayout.NORTH);
 
-        // Customer List Area
-        customerListArea = new JList<>(customerListModel);  // Set model to JList
+        customerListArea = new JList<>(customerListModel);
         customerListArea.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         customerListArea.setVisibleRowCount(20);
         customerListArea.setCellRenderer(new CustomerRenderer());
@@ -68,7 +70,6 @@ public class CustomerView {
         JScrollPane scrollPane = new JScrollPane(customerListArea);
         frame.add(scrollPane, BorderLayout.CENTER);
 
-        // Customer Details Panel
         JPanel detailsPanel = new JPanel();
         detailsPanel.setLayout(new GridLayout(1, 2));
 
@@ -77,15 +78,12 @@ public class CustomerView {
 
         frame.add(detailsPanel, BorderLayout.SOUTH);
 
-        // Make frame visible
         frame.setVisible(false);
 
-        // Button functionality
         addButtonFunctionality();
         addListSelectionListener();
     }
 
-    // Method to update the display area with the current list of customers
     public void updateCustomerList(LinkedList<Customer> customers) {
         customerListModel.clear();
         for (Customer customer : customers) {
@@ -93,12 +91,10 @@ public class CustomerView {
         }
     }
 
-    // Action listener functionality for buttons
     private void addButtonFunctionality() {
         addCustomerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Get customer data from the input fields
                 try {
                     int customerId = customerList.size()+1;
                     String name = nameField.getText();
@@ -108,16 +104,18 @@ public class CustomerView {
                         return;
                     }
 
-                    // Create a new Customer object
                     Customer newCustomer = new Customer(customerId, name.split(" ")[0], name.split(" ")[1]);
-
-                    // Add to the customer list
+                    int shipmentId = customerId*1000+newCustomer.getShipmentHistory().size();
+                    LocalDateTime localDateTime = LocalDateTime.now();
+                    Date date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+                    String selectedSenderCity = (String) sCityComboBox.getSelectedItem();
+                    String selectedReceiverCity = (String) sCityComboBox.getSelectedItem();
+                    Shipment cargo = new Shipment( shipmentId,date, "IN TRANSIT",12,new City(selectedSenderCity), new City(selectedReceiverCity));
+                    newCustomer.addShipment(cargo);
                     customerList.add(newCustomer);
 
-                    // Update the display of customers in the list
                     updateCustomerList(customerList);
 
-                    // Clear the input fields after adding
                     nameField.setText("");
                 } catch (NumberFormatException ex) {
                     JOptionPane.showMessageDialog(frame, "Customer ID must be a valid number.");
@@ -125,15 +123,12 @@ public class CustomerView {
             }
         });
 
-        // Action listener for the back button
         backButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Hide the CustomerView
                 frame.setVisible(false);
 
-                // Return to the MainScreen
-                new MainScreen(customerList);  // This will display the MainScreen
+                new MainScreen(customerList);
             }
         });
 
@@ -142,20 +137,19 @@ public class CustomerView {
             public void actionPerformed(ActionEvent e) {
                 Customer selectedCustomer = getSelectedCustomer();
                 if (selectedCustomer != null) {
-                    // Open the Customer Details screen
                     new CustomerDetailsView(selectedCustomer);
                 } else {
                     JOptionPane.showMessageDialog(frame, "Please select a customer from the list.");
                 }
             }
         });
+
     }
 
     private void addListSelectionListener() {
         customerListArea.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                // Check if the click is on a valid customer in the list
                 int index = customerListArea.locationToIndex(e.getPoint());
                 if (index >= 0) {
                     Customer selectedCustomer = customerListArea.getModel().getElementAt(index);
@@ -165,7 +159,6 @@ public class CustomerView {
         });
     }
 
-    // Getter for the Add Customer button
     public JButton getAddCustomerButton() {
         return addCustomerButton;
     }
