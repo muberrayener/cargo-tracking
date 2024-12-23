@@ -15,12 +15,9 @@ public class Customer {
     }
 
     public void addShipment(Shipment shipment) {
-        int index = 0;
-        while (index < shipmentHistory.size() && shipmentHistory.get(index).shipmentDate.before(shipment.shipmentDate)) {
-            index++;
-        }
-        shipmentHistory.add(index, shipment);
-        System.out.println(shipment.status);
+
+        shipmentHistory.add(shipment);
+        shipment.displayShipment();
     }
 
     public void displayShipmentHistory() {
@@ -42,8 +39,12 @@ public class Customer {
     }
 
     public void setCustomerId(int customerId) {
+        this.customerId = customerId;
     }
 
     public void setName(String name) {
+        this.firstName = name.split(" ")[0];
+        this.lastName = name.split(" ")[1];
     }
+
 }

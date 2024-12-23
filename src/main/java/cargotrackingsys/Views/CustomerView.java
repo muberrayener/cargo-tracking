@@ -27,9 +27,7 @@ public class CustomerView {
     private JButton viewDetailsButton;
     private LinkedList<Customer> customerList;
     private DefaultListModel<Customer> customerListModel;
-    private JComboBox<String> rCityComboBox;
-    private JComboBox<String> sCityComboBox;
-    private static String[] cities = { "Istanbul", "Ankara", "Izmir", "Antalya", "Bursa", "Adana" };
+
     public CustomerView(LinkedList<Customer> customerList) {
         this.customerList = customerList;
         customerListModel = new DefaultListModel<>();
@@ -46,13 +44,7 @@ public class CustomerView {
         nameField = new JTextField();
         inputPanel.add(nameField);
 
-        inputPanel.add(new JLabel("Sender City"));
-        sCityComboBox = new JComboBox<>(cities);
-        inputPanel.add(sCityComboBox);
 
-        inputPanel.add(new JLabel("Receiver City"));
-        rCityComboBox = new JComboBox<>(cities);
-        inputPanel.add(rCityComboBox);
 
         addCustomerButton = new JButton("Add Customer");
         inputPanel.add(addCustomerButton);
@@ -105,13 +97,7 @@ public class CustomerView {
                     }
 
                     Customer newCustomer = new Customer(customerId, name.split(" ")[0], name.split(" ")[1]);
-                    int shipmentId = customerId*1000+newCustomer.getShipmentHistory().size();
-                    LocalDateTime localDateTime = LocalDateTime.now();
-                    Date date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
-                    String selectedSenderCity = (String) sCityComboBox.getSelectedItem();
-                    String selectedReceiverCity = (String) sCityComboBox.getSelectedItem();
-                    Shipment cargo = new Shipment( shipmentId,date, "IN TRANSIT",12,new City(selectedSenderCity), new City(selectedReceiverCity));
-                    newCustomer.addShipment(cargo);
+
                     customerList.add(newCustomer);
 
                     updateCustomerList(customerList);

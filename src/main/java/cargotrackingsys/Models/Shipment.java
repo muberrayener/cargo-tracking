@@ -28,21 +28,23 @@ public class Shipment implements Comparable<Shipment> {
     public Shipment(){}
 
     public int getShipmentId(){
-        return shipmentId;
+        return this.shipmentId;
     }
 
     public String getDeliveryStatus() {
-        return status;
+        return this.status;
     }
 
     public void setShipmentId(int shipmentId) {
+        this.shipmentId = shipmentId;
     }
 
     public void setDeliveryStatus(String status) {
+        this.status = status;
     }
 
     public String getStatus() {
-        return status;
+        return this.status;
     }
 
     public void setStatus(String status) {
@@ -50,11 +52,11 @@ public class Shipment implements Comparable<Shipment> {
     }
 
     public City getStartCity() {
-        return startCity;
+        return this.startCity;
     }
 
     public City getEndCity() {
-        return endCity;
+        return this.endCity;
     }
 
     public void setStartCity(City startCity) {

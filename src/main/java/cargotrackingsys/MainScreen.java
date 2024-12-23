@@ -1,6 +1,5 @@
 package cargotrackingsys;
 
-import cargotrackingsys.Controllers.MainController;
 import cargotrackingsys.Models.City;
 import cargotrackingsys.Models.Customer;
 import cargotrackingsys.Models.Shipment;
@@ -54,11 +53,9 @@ public class MainScreen {
     }
     public static void main(String[] args) {
         LinkedList<Customer> customerList = new LinkedList<>();
-        Shipment shipment = new Shipment(101, new Date(),"In Transit",1);
         CargoView cargoView = new CargoView(customerList);
         CustomerView customerView = new CustomerView(customerList);
         MainScreen mainScreen = new MainScreen(customerList);
-        MainController controller = new MainController(customerList, shipment, customerView, cargoView);
         City.DrawTree();
     }
 
@@ -71,6 +68,7 @@ public class MainScreen {
     private void openCargoView() {
         CargoView cargoView = new CargoView(this.customerList);
         cargoView.setVisibility(true);
+        mainFrame.setVisible(false);
     }
 
 }
