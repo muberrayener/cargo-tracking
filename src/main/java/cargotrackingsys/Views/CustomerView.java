@@ -33,7 +33,7 @@ public class CustomerView {
         customerListModel = new DefaultListModel<>();
         updateCustomerList(this.customerList);
         frame = new JFrame("Customer Management");
-        frame.setSize(500, 400);
+        frame.setSize(600, 400);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
 

@@ -1,30 +1,26 @@
 package cargotrackingsys.Models;
 import java.util.LinkedList;
+import java.util.Stack;
 
 public class Customer {
     int customerId;
     String firstName;
     String lastName;
-    LinkedList<Shipment> shipmentHistory;
+    Stack<Shipment> shipmentHistory;
 
     public Customer(int customerId, String firstName, String lastName) {
         this.customerId = customerId;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.shipmentHistory = new LinkedList<>();
+        this.shipmentHistory = new Stack<Shipment>();
     }
 
     public void addShipment(Shipment shipment) {
 
-        shipmentHistory.add(shipment);
+        shipmentHistory.push(shipment);
         shipment.displayShipment();
     }
 
-    public void displayShipmentHistory() {
-        for (Shipment shipment : shipmentHistory) {
-            System.out.println("Shipment ID: " + shipment.shipmentId + ", Date: " + shipment.shipmentDate + ", Status: " + shipment.status + ", Delivery Time: " + shipment.deliveryTime);
-        }
-    }
 
     public int getCustomerId() {
         return customerId;
@@ -34,7 +30,7 @@ public class Customer {
         return firstName + " " + lastName;
     }
 
-    public LinkedList<Shipment> getShipmentHistory() {
+    public Stack<Shipment> getShipmentHistory() {
         return this.shipmentHistory;
     }
 

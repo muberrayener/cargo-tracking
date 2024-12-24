@@ -5,6 +5,7 @@ import cargotrackingsys.Models.Customer;
 import cargotrackingsys.Models.Shipment;
 import cargotrackingsys.Views.CargoView;
 import cargotrackingsys.Views.CustomerView;
+import cargotrackingsys.Views.RouteView;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -16,13 +17,14 @@ public class MainScreen {
 
     private JFrame mainFrame;
     private JButton openCustomerViewButton;
+    private JButton openRouteViewButton;
     private JButton openCargoViewButton;
     private LinkedList<Customer> customerList;
 
     public MainScreen(LinkedList<Customer> customerList) {
         this.customerList = customerList;
         mainFrame = new JFrame("Main Screen");
-        mainFrame.setSize(400, 300);
+        mainFrame.setSize(600, 400);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.setLayout(null);
 
@@ -33,6 +35,10 @@ public class MainScreen {
         openCargoViewButton = new JButton("Open Cargo View");
         openCargoViewButton.setBounds(100, 170, 200, 50);
         mainFrame.add(openCargoViewButton);
+
+        openRouteViewButton = new JButton("Open Route View");
+        openRouteViewButton.setBounds(100, 240, 200, 50);
+        mainFrame.add(openRouteViewButton);
 
         openCustomerViewButton.addActionListener(new ActionListener() {
             @Override
@@ -45,6 +51,13 @@ public class MainScreen {
             @Override
             public void actionPerformed(ActionEvent e) {
                 openCargoView();
+            }
+        });
+
+        openRouteViewButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                openRouteView();
             }
         });
 
@@ -69,6 +82,12 @@ public class MainScreen {
     private void openCargoView() {
         CargoView cargoView = new CargoView(this.customerList);
         cargoView.setVisibility(true);
+        mainFrame.setVisible(false);
+    }
+
+    private void openRouteView() {
+        RouteView routeView = new RouteView(this.customerList);
+        routeView.setVisibility(true);
         mainFrame.setVisible(false);
     }
 

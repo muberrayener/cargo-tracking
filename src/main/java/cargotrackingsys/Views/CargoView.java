@@ -23,7 +23,7 @@ public class CargoView {
     private JTextField shipmentIdField;
     private JTextField customerIdField;
     private JTextField customerNameField;
-    private JTextField shipmentStatusField;
+    private JComboBox<String> shipmentStatusField;
     private JButton addCargoButton;
     private JButton backButton;
     private JButton findCustomerButton;
@@ -33,15 +33,17 @@ public class CargoView {
     private JComboBox<String> sCityComboBox;
     private static String[] cities = { "İstanbul", "Ankara", "İzmir", "Antalya", "Bursa", "Adana" };
     private static String[] center = { "Cargo Center"};
+    private static String[] status = { "ADMITTED","IN TRANSIT", "DELIVERED"};
     private DefaultListModel<Shipment> shipmentListModel;
     private JButton viewDetailsButton;
+    private JButton findCargoButton;
 
     public CargoView(LinkedList<Customer> customerList) {
 
         this.customerList = customerList;
         shipmentListModel = new DefaultListModel<>();
         cargoFrame = new JFrame("Cargo Management");
-        cargoFrame.setSize(400, 300);
+        cargoFrame.setSize(600, 400);
         cargoFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         cargoFrame.setLayout(new BorderLayout());
 
@@ -60,12 +62,8 @@ public class CargoView {
         customerNameField = new JTextField(15);
         panel.add(customerNameField);
 
-        panel.add(new JLabel("Shipment ID:"));
-        shipmentIdField = new JTextField(15);
-        panel.add(shipmentIdField);
-
         panel.add(new JLabel("Shipment Status:"));
-        shipmentStatusField = new JTextField(15);
+        shipmentStatusField = new JComboBox<>(status);
         panel.add(shipmentStatusField);
 
         panel.add(new JLabel("Start Location"));
@@ -81,6 +79,9 @@ public class CargoView {
 
         backButton = new JButton("Back to Main Screen");
         panel.add(backButton);
+
+        findCargoButton = new JButton("Find Cargo");
+        panel.add(findCargoButton);
 
 
         shipmentListArea = new JList<>(shipmentListModel);
@@ -135,7 +136,7 @@ public class CargoView {
                 Date date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
                 String selectedSenderCity = (String) sCityComboBox.getSelectedItem();
                 String selectedReceiverCity = (String) rCityComboBox.getSelectedItem();
-                Shipment cargo = new Shipment( shipmentId,date, shipmentStatusField.getText(),new City(selectedSenderCity), new City(selectedReceiverCity));
+                Shipment cargo = new Shipment( shipmentId,date, (String)shipmentStatusField.getSelectedItem(),new City(selectedSenderCity), new City(selectedReceiverCity));
                 customer.addShipment(cargo);
                 updateShipmentList(customer.getShipmentHistory());
                 clearInputFields();
@@ -168,14 +169,13 @@ public class CargoView {
     public void clearInputFields() {
         customerIdField.setText("");
         customerNameField.setText("");
-        shipmentIdField.setText("");
-        shipmentStatusField.setText("");
+        shipmentStatusField.setSelectedIndex(0);
         sCityComboBox.setSelectedIndex(0);
         rCityComboBox.setSelectedIndex(0);
     }
 
     public int getShipmentId() {
-        return Integer.parseInt(shipmentIdField.getText().trim());
+        return Integer.parseInt(shipmentIdField.getSelectedText().trim());
     }
 
     public int getCustomerId() {
@@ -183,7 +183,7 @@ public class CargoView {
     }
 
     public String getShipmentStatus() {
-        return shipmentStatusField.getText();
+        return shipmentStatusField.getSelectedItem().toString();
     }
 
     public JButton getAddCargoButton() {
@@ -199,7 +199,7 @@ public class CargoView {
     }
 
     public String getStatus() {
-        return shipmentStatusField.getText();
+        return shipmentStatusField.getSelectedItem().toString() ;
     }
 
     public void setVisibility (boolean visible) {
@@ -218,10 +218,22 @@ public class CargoView {
         });
     }
 
-    public void updateShipmentList(LinkedList<Shipment> shipments) {
-        shipmentListModel.clear();
-        for (Shipment shipment : shipments) {
-            shipmentListModel.addElement(shipment);
+    public void updateShipmentList(Stack<Shipment> shipments) {
+        shipmentListModel.clear();  // Clear the current shipment list in the model
+
+        // If the stack has more than 5 shipments, take the last 5
+        int size = shipments.size();
+        int startIndex = size > 5 ? size - 5 : 0;  // Ensure we don't start with a negative index
+
+        // Create a temporary list to hold the last 5 shipments (or less if there are fewer than 5)
+        ArrayList<Shipment> lastShipments = new ArrayList<>(shipments.subList(startIndex, size));
+
+        // Reverse the order to make the most recent shipment appear first
+        Collections.reverse(lastShipments);
+
+        // Add the last 5 shipments to the model (they will be displayed in the correct order)
+        for (Shipment shipment : lastShipments) {
+            shipmentListModel.addElement(shipment);  // Add the shipment to the list model
         }
     }
 

@@ -28,8 +28,8 @@ public class CustomerDetailsView {
         nameField = new JTextField(customer.getName());
         nameField.setEditable(false);
 
-        cargoLabel = new JLabel("Cargo ID");
-        cargoField = new JTextField(customer.getShipmentHistory().size());
+        cargoLabel = new JLabel("Number of Cargo:");
+        cargoField = new JTextField(String.valueOf(customer.getShipmentHistory().size()));
         cargoField.setEditable(false);
 
         closeButton = new JButton("Close");

@@ -82,19 +82,13 @@ public class Shipment implements Comparable<Shipment> {
     public int compareTo(Shipment other) {
         return Integer.compare(this.deliveryTime, other.deliveryTime);
     }
-
-    public String showRoute(){
-        Set<City> visited = new HashSet<>();
-        ArrayList<String> path = new ArrayList<>();
-        String route = City.findRoute(this.startCity, this.endCity, visited, path);
-        if (route != null)
-            return route;
-        return "no route found";
-
-    }
+    
 
     public int calculateDistance(){
         return City.findDistance(this.startCity, this.endCity);
     }
 
+    public void setDeliveryTime(int count) {
+        this.deliveryTime = count;
+    }
 }

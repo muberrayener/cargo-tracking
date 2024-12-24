@@ -222,7 +222,7 @@ public class City {
         System.out.println("Geographically Connected Tree of Turkish Cities:");
 
         StringBuilder dotBuilder = new StringBuilder();
-        dotBuilder.append("digraph TurkishCities {\n");
+        dotBuilder.append("TurkishCities Tree {\n");
 
         Set<City> visited = new HashSet<>();
         center.generateDOT(dotBuilder, visited);
@@ -257,6 +257,33 @@ public class City {
         return null; // No route found through this path
     }
 
+    private static boolean findPathDFS(City currentCity, String targetCityName, List<String> path, Set<City> visited) {
+        // Mark the current city as visited
+        if (visited.contains(currentCity)) {
+            return false;  // Prevent revisiting the city (to avoid infinite recursion)
+        }
+        visited.add(currentCity);
+
+        // Add the current city to the path
+        path.add(currentCity.getCityName());
+
+        // If we've found the target city, return true
+        if (currentCity.getCityName().equals(targetCityName)) {
+            return true;
+        }
+
+        // Recursively search each child
+        for (City child : currentCity.getChildren()) {
+            if (findPathDFS(child, targetCityName, path, visited)) {
+                return true;  // Path found in the child
+            }
+        }
+
+        // Backtrack: remove the current city from the path if the target is not found
+        path.remove(path.size() - 1);
+        return false;
+    }
+
     public static int findDistance(City source, City destination) {
         if (source == destination) {
             return 0; // Distance to the same city is 0
@@ -289,5 +316,44 @@ public class City {
         }
 
         return -1; // If no path was found in the current branch, return -1
+    }
+
+    public static String listRoute ( String targetCityName){
+        City root = GetTree();
+        List<String> path = findPath(root, targetCityName);
+        String route;
+
+        if (path != null) {
+            route = "Path to" + targetCityName + ": " + String.join(" -> ", path);
+        } else {
+            route = "City not found.";
+        }
+        return route;
+    }
+
+    public static List<String> findPath(City root, String targetCityName) {
+        // List to hold the path
+        List<String> path = new ArrayList<>();
+        Set<City> visited = new HashSet<>();
+        // Start DFS from the root
+        if (findPathDFS(root, targetCityName, path,visited)) {
+            return path;  // Path found, return it
+        } else {
+            return null;  // No path found
+        }
+    }
+
+    public static int countArrowOccurrences(String input) {
+        // Split the input string by the "->" delimiter and count the occurrences
+        int count = 0;
+        int index = 0;
+
+        // Keep looking for "->" in the string
+        while ((index = input.indexOf("->", index)) != -1) {
+            count++;  // Increment the counter each time "->" is found
+            index += 2; // Move past the found "->"
+        }
+
+        return count;
     }
 }
