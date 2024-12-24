@@ -32,7 +32,12 @@ public class CargoView {
     public LinkedList<Customer> customerList;
     private JComboBox<String> rCityComboBox;
     private JComboBox<String> sCityComboBox;
-    private static String[] cities = { "İstanbul", "Ankara", "İzmir", "Antalya", "Bursa", "Adana" };
+    private static String[] cities = {   "Adana", "Afyonkarahisar", "Agri", "Alanya", "Ankara", "Antalya", "Artvin",
+            "Ardahan", "Balikesir", "Bolu", "Burdur", "Denizli", "Duzce", "Edirne",
+            "Erzincan", "Erzurum", "Eskisehir", "Gaziantep", "Gumushane", "Hakkari",
+            "Hatay", "İstanbul", "İzmir", "Isparta", "Kars", "Karaman", "Kayseri",
+            "Kilis", "Konya", "Kocaeli", "Mardin", "Mersin", "Mugla", "Sanliurfa",
+            "Sakarya", "Samsun", "Tekirdag", "Trabzon", "Tunceli", "Yalova" };
     private static String[] center = { "Cargo Center"};
     private static String[] status = { "ADMITTED","IN TRANSIT", "DELIVERED"};
     private DefaultListModel<Shipment> shipmentListModel;

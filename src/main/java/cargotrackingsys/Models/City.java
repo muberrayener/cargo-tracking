@@ -313,7 +313,7 @@ public class City {
         String route;
 
         if (path != null) {
-            route = "Path to" + targetCityName + ": " + String.join(" -> ", path);
+            route = "Path to " + targetCityName + ": " + String.join(" -> ", path);
         } else {
             route = "City not found.";
         }
