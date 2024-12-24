@@ -17,9 +17,11 @@ public class Shipment implements Comparable<Shipment> {
         this.shipmentId = shipmentId;
         this.shipmentDate = shipmentDate;
         this.status = status;
-        this.deliveryTime = this.calculateDistance();
         this.startCity = startCity;
         this.endCity = endCity;
+        String route = City.listRoute(this.endCity.getCityName());
+        int count =  City.countArrowOccurrences(route);
+        this.deliveryTime = count;
     }
 
     public Shipment(int shipmentId, Date shipmentDate, String status, int deliveryTime) {
@@ -82,7 +84,7 @@ public class Shipment implements Comparable<Shipment> {
     public int compareTo(Shipment other) {
         return Integer.compare(this.deliveryTime, other.deliveryTime);
     }
-    
+
 
     public int calculateDistance(){
         return City.findDistance(this.startCity, this.endCity);

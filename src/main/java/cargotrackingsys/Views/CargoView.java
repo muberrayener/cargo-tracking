@@ -164,6 +164,12 @@ public class CargoView {
                 }
             }
         });
+        findCargoButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new SearchFilterView(customerList);
+            }
+        });
     }
 
     public void clearInputFields() {
@@ -240,5 +246,7 @@ public class CargoView {
     public Shipment getSelectedShipment() {
         return shipmentListArea.getSelectedValue();
     }
+
+
 
 }
