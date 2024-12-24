@@ -8,14 +8,14 @@ import cargotrackingsys.Models.Shipment;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Date;
-import java.util.LinkedList;
+import java.util.*;
 
 public class CargoView {
 
@@ -31,7 +31,8 @@ public class CargoView {
     public LinkedList<Customer> customerList;
     private JComboBox<String> rCityComboBox;
     private JComboBox<String> sCityComboBox;
-    private static String[] cities = { "Istanbul", "Ankara", "Izmir", "Antalya", "Bursa", "Adana" };
+    private static String[] cities = { "İstanbul", "Ankara", "İzmir", "Antalya", "Bursa", "Adana" };
+    private static String[] center = { "Cargo Center"};
     private DefaultListModel<Shipment> shipmentListModel;
     private JButton viewDetailsButton;
 
@@ -67,8 +68,8 @@ public class CargoView {
         shipmentStatusField = new JTextField(15);
         panel.add(shipmentStatusField);
 
-        panel.add(new JLabel("Sender City"));
-        sCityComboBox = new JComboBox<>(cities);
+        panel.add(new JLabel("Start Location"));
+        sCityComboBox = new JComboBox<>(center);
         panel.add(sCityComboBox);
 
         panel.add(new JLabel("Receiver City"));
@@ -134,7 +135,7 @@ public class CargoView {
                 Date date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
                 String selectedSenderCity = (String) sCityComboBox.getSelectedItem();
                 String selectedReceiverCity = (String) rCityComboBox.getSelectedItem();
-                Shipment cargo = new Shipment( shipmentId,date, shipmentStatusField.getText(), 12,new City(selectedSenderCity), new City(selectedReceiverCity));
+                Shipment cargo = new Shipment( shipmentId,date, shipmentStatusField.getText(),new City(selectedSenderCity), new City(selectedReceiverCity));
                 customer.addShipment(cargo);
                 updateShipmentList(customer.getShipmentHistory());
                 clearInputFields();
@@ -148,6 +149,18 @@ public class CargoView {
                 cargoFrame.setVisible(false);
 
                 new MainScreen(customerList);
+            }
+        });
+
+        viewDetailsButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Shipment selectedShipment = getSelectedShipment();
+                if (selectedShipment != null) {
+                    new ShipmentDetailsView(selectedShipment);
+                } else {
+                    JOptionPane.showMessageDialog(cargoFrame, "Please select a customer from the list.");
+                }
             }
         });
     }
@@ -210,6 +223,10 @@ public class CargoView {
         for (Shipment shipment : shipments) {
             shipmentListModel.addElement(shipment);
         }
+    }
+
+    public Shipment getSelectedShipment() {
+        return shipmentListArea.getSelectedValue();
     }
 
 }

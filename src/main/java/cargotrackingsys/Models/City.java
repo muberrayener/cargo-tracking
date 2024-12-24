@@ -2,6 +2,7 @@ package cargotrackingsys.Models;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class City {
@@ -12,11 +13,12 @@ public class City {
     public City(int cityId, String cityName) {
         this.cityId = cityId;
         this.cityName = cityName;
-        this.children = new ArrayList<>();
+        this.children = new ArrayList<City>();
     }
 
     public City(String cityName) {
         this.cityName = cityName;
+        this.children = new ArrayList<City>();
     }
 
     public void addChild(City city) {
@@ -51,9 +53,9 @@ public class City {
         return this.children;
     }
 
-    public void setChildren() {
+    public ArrayList<City> setChildren() {
         City root= GetTree();
-        this.children = findCity(root, this.cityName).getChildren();
+        return this.children = findCity(root, this.cityName).getChildren();
     }
 
     public static City findCity(City root, String targetCityName) {
@@ -70,7 +72,7 @@ public class City {
         return null;
     }
 
-    private String getCityName() {
+    public String getCityName() {
         return this.cityName;
     }
 
@@ -157,12 +159,9 @@ public class City {
         City yozgat = new City(80, "Yozgat");
         City zonguldak = new City(81, "Zonguldak");
 
-        City blacksea = new City(2, "Blacksea");
-        City marmara = new City(2, "Marmara");
-        City aegean = new City(3, "Aegean");
-        City central = new City(4, "Central Anatolia");
-        City mediterranean = new City(5, "Mediterranean");
+        City center = new City(100, "Cargo Center");
 
+        center.addChild(edirne);
         edirne.addChild(istanbul);
         istanbul.addChild(kocaeli);
         istanbul.addChild(tekirdag);
@@ -214,22 +213,81 @@ public class City {
 
         burdur.addChild(isparta);
 
-        return edirne;
+        return center;
     }
 
-    public static void DrawTree(){
+    public static String DrawTree(){
 
-        City edirne = GetTree();
+        City center = GetTree();
         System.out.println("Geographically Connected Tree of Turkish Cities:");
 
         StringBuilder dotBuilder = new StringBuilder();
         dotBuilder.append("digraph TurkishCities {\n");
 
         Set<City> visited = new HashSet<>();
-        edirne.generateDOT(dotBuilder, visited);
+        center.generateDOT(dotBuilder, visited);
 
         dotBuilder.append("}\n");
 
-        System.out.println(dotBuilder.toString());
+        return dotBuilder.toString();
+    }
+
+    public static String findRoute(City currentCity, City destinationCity, Set<City> visited, List<String> path) {
+        // Mark the current city as visited
+        visited.add(currentCity);
+        path.add(currentCity.getCityName());
+
+        // If we've reached the destination city, return the path as a string
+        if (currentCity == destinationCity) {
+            return String.join(" -> ", path);
+        }
+
+        // Recursively visit each child city (child nodes in the tree)
+        for (City child : currentCity.getChildren()) {
+            if (!visited.contains(child)) {
+                String result = findRoute(child, destinationCity, visited, path);
+                if (result != null) {
+                    return result; // If route is found, return the result
+                }
+            }
+        }
+
+        // Backtrack: remove the current city from the path if not found
+        path.remove(path.size() - 1);
+        return null; // No route found through this path
+    }
+
+    public static int findDistance(City source, City destination) {
+        if (source == destination) {
+            return 0; // Distance to the same city is 0
+        }
+        Set<City> visited = new HashSet<>();
+        return dfs(source, destination, visited, 0);
+    }
+
+    // DFS recursive method to find the distance
+    private static int dfs(City current, City destination, Set<City> visited, int depth) {
+        // If we've already visited this city, skip it (to avoid cycles, though there should not be any in a tree)
+        if (visited.contains(current)) {
+            return -1; // No path found
+        }
+
+        // Mark the current city as visited
+        visited.add(current);
+
+        // If we reached the destination, return the depth (distance)
+        if (current == destination) {
+            return depth;
+        }
+
+        // Explore all the child cities (neighboring cities) of the current city
+        for (City child : current.getChildren()) {
+            int result = dfs(child, destination, visited, depth + 1); // Recurse with incremented depth
+            if (result != -1) {
+                return result; // If we found the destination, return the distance
+            }
+        }
+
+        return -1; // If no path was found in the current branch, return -1
     }
 }

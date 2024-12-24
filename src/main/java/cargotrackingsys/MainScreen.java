@@ -56,7 +56,8 @@ public class MainScreen {
         CargoView cargoView = new CargoView(customerList);
         CustomerView customerView = new CustomerView(customerList);
         MainScreen mainScreen = new MainScreen(customerList);
-        City.DrawTree();
+        System.out.println(City.DrawTree());
+
     }
 
     private void openCustomerView() {
