@@ -17,21 +17,20 @@ public class SortingAndSearching {
             int mid = (left + right) / 2;
             Shipment midShipment = shipments.get(mid);
 
-            // Compare the shipment ID with the mid element's shipment ID
+
             if (midShipment.getShipmentId() == shipmentId) {
-                return midShipment;  // Return the shipment if found
+                return midShipment;
             } else if (midShipment.getShipmentId() < shipmentId) {
-                left = mid + 1;  // Search in the right half
+                left = mid + 1;
             } else {
-                right = mid - 1;  // Search in the left half
+                right = mid - 1;
             }
         }
 
-        return null;  // Return null if not found
+        return null;
     }
 
     public static Shipment findShipmentById(ArrayList<Shipment> shipments, int shipmentId) {
-        // Sort the shipments by shipmentId
         Collections.sort(shipments, new Comparator<Shipment>() {
             @Override
             public int compare(Shipment s1, Shipment s2) {
@@ -39,33 +38,41 @@ public class SortingAndSearching {
             }
         });
 
-        // Perform binary search to find the shipment by ID
         return binarySearch(shipments, shipmentId);
     }
 
-    public static void mergeSort(Shipment[] shipments) {
-        if (shipments.length <= 1) return;
+    public static void mergeSort(ArrayList<Shipment> shipments) {
+        if (shipments.size() <= 1) return;
 
-        int mid = shipments.length / 2;
-        Shipment[] left = Arrays.copyOfRange(shipments, 0, mid);
-        Shipment[] right = Arrays.copyOfRange(shipments, mid, shipments.length);
+        int mid = shipments.size() / 2;
+
+        ArrayList<Shipment> left = new ArrayList<>(shipments.subList(0, mid));
+        ArrayList<Shipment> right = new ArrayList<>(shipments.subList(mid, shipments.size()));
 
         mergeSort(left);
         mergeSort(right);
 
+        merge(shipments, left, right);
+    }
+
+    private static void merge(ArrayList<Shipment> shipments, ArrayList<Shipment> left, ArrayList<Shipment> right) {
         int i = 0, j = 0, k = 0;
-        while (i < left.length && j < right.length) {
-            if (left[i].deliveryTime < right[j].deliveryTime) {
-                shipments[k++] = left[i++];
+
+        while (i < left.size() && j < right.size()) {
+            if (left.get(i).getDeliveryTime() < right.get(j).getDeliveryTime()) {
+                shipments.set(k++, left.get(i++));
             } else {
-                shipments[k++] = right[j++];
+                shipments.set(k++, right.get(j++));
             }
         }
-        while (i < left.length) {
-            shipments[k++] = left[i++];
+
+        while (i < left.size()) {
+            shipments.set(k++, left.get(i++));
         }
-        while (j < right.length) {
-            shipments[k++] = right[j++];
+
+        while (j < right.size()) {
+            shipments.set(k++, right.get(j++));
         }
     }
+
 }

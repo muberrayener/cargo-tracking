@@ -18,20 +18,20 @@ public class RouteView {
 
     private JTextArea routeArea;
     private JFrame frame;
+    private JButton backButton;
+    private LinkedList<Customer> customerList ;
     public RouteView(LinkedList<Customer> customerList) {
+        this.customerList = customerList;
         frame = new JFrame("Route");
         frame.setSize(600, 400);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
-
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         JPanel inputPanel = new JPanel();
         inputPanel.setLayout(new GridLayout(4, 2));  // 3 rows, 2 columns
 
-
-
-
         frame.add(inputPanel, BorderLayout.NORTH);
-
+        backButton = new JButton("Back to Main Screen");
+        inputPanel.add(backButton);
         routeArea = new JTextArea(City.DrawTree());
         JScrollPane scrollPane = new JScrollPane(routeArea);
         frame.add(scrollPane, BorderLayout.CENTER);
@@ -44,10 +44,21 @@ public class RouteView {
 
         frame.setVisible(false);
 
-
+        addButtonFunctionality();
     }
 
     public void setVisibility(boolean b) {
         frame.setVisible(b);
+    }
+
+    private void addButtonFunctionality() {
+        backButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                frame.setVisible(false);
+
+                new MainScreen(customerList);
+            }
+        });
     }
 }

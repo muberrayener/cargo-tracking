@@ -35,13 +35,10 @@ public class City {
             return;
         }
 
-        // Mark this city as visited
         visited.add(this);
 
-        // Add the city node to the DOT file
         dotBuilder.append("  \"" + this.cityName + "\";\n");
 
-        // Add edges (connections) between this city and its neighbors
         for (City neighbor : children) {
             dotBuilder.append("  \"" + this.cityName + "\" -> \"" + neighbor.cityName + "\";\n");
             neighbor.generateDOT(dotBuilder, visited); // Recurse for neighbors
@@ -170,47 +167,52 @@ public class City {
 
         kocaeli.addChild(istanbul);
         kocaeli.addChild(sakarya);
-
         bursa.addChild(balikesir);
         bursa.addChild(yalova);
         yalova.addChild(sakarya);
-
         sakarya.addChild(duzce);
+        duzce.addChild(samsun);
+        samsun.addChild(trabzon);
+        samsun.addChild(gumushane);
+        gumushane.addChild(kastamonu);
+        trabzon.addChild(tunceli);
+        trabzon.addChild(artvin);
+        artvin.addChild(kars);
+        kars.addChild(ardahan);
+        ardahan.addChild(erzurum);
+        erzurum.addChild(erzincan);
+        ardahan.addChild(hakkari);
+        hakkari.addChild(agri);
         sakarya.addChild(bolu);
-
         duzce.addChild(bolu);
-
         bolu.addChild(ankara);
-
         ankara.addChild(konya);
+        konya.addChild(karaman);
         ankara.addChild(kayseri);
         ankara.addChild(eskisehir);
         ankara.addChild(kirikkale);
+        eskisehir.addChild(afyonkarahisar);
+        afyonkarahisar.addChild(denizli);
         konya.addChild(mersin);
+        konya.addChild(antalya);
+        antalya.addChild(burdur);
         mersin.addChild(adana);
         mersin.addChild(hatay);
         mersin.addChild(gaziantep);
-
         adana.addChild(hatay);
         adana.addChild(gaziantep);
-
         hatay.addChild(gaziantep);
-
         gaziantep.addChild(sanliurfa);
         gaziantep.addChild(kilis);
         gaziantep.addChild(mardin);
-
         sanliurfa.addChild(gaziantep);
         sanliurfa.addChild(kilis);
         sanliurfa.addChild(mardin);
-
         kilis.addChild(mardin);
-
-
         antalya.addChild(burdur);
         antalya.addChild(isparta);
         antalya.addChild(mugla);
-
+        mugla.addChild(izmir);
         burdur.addChild(isparta);
 
         return center;
@@ -233,89 +235,76 @@ public class City {
     }
 
     public static String findRoute(City currentCity, City destinationCity, Set<City> visited, List<String> path) {
-        // Mark the current city as visited
         visited.add(currentCity);
         path.add(currentCity.getCityName());
 
-        // If we've reached the destination city, return the path as a string
         if (currentCity == destinationCity) {
             return String.join(" -> ", path);
         }
 
-        // Recursively visit each child city (child nodes in the tree)
         for (City child : currentCity.getChildren()) {
             if (!visited.contains(child)) {
                 String result = findRoute(child, destinationCity, visited, path);
                 if (result != null) {
-                    return result; // If route is found, return the result
+                    return result;
                 }
             }
         }
 
-        // Backtrack: remove the current city from the path if not found
+
         path.remove(path.size() - 1);
-        return null; // No route found through this path
+        return null;
     }
 
     private static boolean findPathDFS(City currentCity, String targetCityName, List<String> path, Set<City> visited) {
-        // Mark the current city as visited
         if (visited.contains(currentCity)) {
-            return false;  // Prevent revisiting the city (to avoid infinite recursion)
+            return false;
         }
         visited.add(currentCity);
 
-        // Add the current city to the path
         path.add(currentCity.getCityName());
 
-        // If we've found the target city, return true
         if (currentCity.getCityName().equals(targetCityName)) {
             return true;
         }
 
-        // Recursively search each child
         for (City child : currentCity.getChildren()) {
             if (findPathDFS(child, targetCityName, path, visited)) {
-                return true;  // Path found in the child
+                return true;
             }
         }
 
-        // Backtrack: remove the current city from the path if the target is not found
         path.remove(path.size() - 1);
         return false;
     }
 
     public static int findDistance(City source, City destination) {
         if (source == destination) {
-            return 0; // Distance to the same city is 0
+            return 0;
         }
         Set<City> visited = new HashSet<>();
         return dfs(source, destination, visited, 0);
     }
 
-    // DFS recursive method to find the distance
     private static int dfs(City current, City destination, Set<City> visited, int depth) {
-        // If we've already visited this city, skip it (to avoid cycles, though there should not be any in a tree)
         if (visited.contains(current)) {
-            return -1; // No path found
+            return -1;
         }
 
-        // Mark the current city as visited
         visited.add(current);
 
-        // If we reached the destination, return the depth (distance)
         if (current == destination) {
             return depth;
         }
 
-        // Explore all the child cities (neighboring cities) of the current city
         for (City child : current.getChildren()) {
-            int result = dfs(child, destination, visited, depth + 1); // Recurse with incremented depth
+            int result = dfs(child, destination, visited, depth + 1);
             if (result != -1) {
-                return result; // If we found the destination, return the distance
+                return result;
             }
         }
 
-        return -1; // If no path was found in the current branch, return -1
+        return -1;
     }
 
     public static String listRoute ( String targetCityName){
@@ -332,26 +321,22 @@ public class City {
     }
 
     public static List<String> findPath(City root, String targetCityName) {
-        // List to hold the path
         List<String> path = new ArrayList<>();
         Set<City> visited = new HashSet<>();
-        // Start DFS from the root
         if (findPathDFS(root, targetCityName, path,visited)) {
-            return path;  // Path found, return it
+            return path;
         } else {
-            return null;  // No path found
+            return null;
         }
     }
 
     public static int countArrowOccurrences(String input) {
-        // Split the input string by the "->" delimiter and count the occurrences
         int count = 0;
         int index = 0;
 
-        // Keep looking for "->" in the string
         while ((index = input.indexOf("->", index)) != -1) {
-            count++;  // Increment the counter each time "->" is found
-            index += 2; // Move past the found "->"
+            count++;
+            index += 2;
         }
 
         return count;

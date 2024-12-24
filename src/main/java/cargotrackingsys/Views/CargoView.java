@@ -225,21 +225,17 @@ public class CargoView {
     }
 
     public void updateShipmentList(Stack<Shipment> shipments) {
-        shipmentListModel.clear();  // Clear the current shipment list in the model
+        shipmentListModel.clear();
 
-        // If the stack has more than 5 shipments, take the last 5
         int size = shipments.size();
-        int startIndex = size > 5 ? size - 5 : 0;  // Ensure we don't start with a negative index
+        int startIndex = size > 5 ? size - 5 : 0;
 
-        // Create a temporary list to hold the last 5 shipments (or less if there are fewer than 5)
         ArrayList<Shipment> lastShipments = new ArrayList<>(shipments.subList(startIndex, size));
 
-        // Reverse the order to make the most recent shipment appear first
         Collections.reverse(lastShipments);
 
-        // Add the last 5 shipments to the model (they will be displayed in the correct order)
         for (Shipment shipment : lastShipments) {
-            shipmentListModel.addElement(shipment);  // Add the shipment to the list model
+            shipmentListModel.addElement(shipment);
         }
     }
 

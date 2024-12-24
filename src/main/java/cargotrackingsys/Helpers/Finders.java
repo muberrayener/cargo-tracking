@@ -22,9 +22,8 @@ public class Finders
     public static ArrayList<Shipment> collectAllShipments(ArrayList<Stack<Shipment>> stacksList) {
         ArrayList<Shipment> allShipments = new ArrayList<>();
 
-        // Iterate through each stack and add all shipments to the list
         for (Stack<Shipment> stack : stacksList) {
-            allShipments.addAll(stack);  // Add all shipments from the stack to the list
+            allShipments.addAll(stack);
         }
 
         return allShipments;
@@ -42,7 +41,6 @@ public class Finders
         ArrayList<Shipment> deliveredShipments = new ArrayList<>();
         ArrayList<Shipment> nonDeliveredShipments = new ArrayList<>();
 
-        // Loop through all shipments and separate them by their status
         for (Shipment shipment : allShipments) {
             if ("DELIVERED".equals(shipment.getStatus())) {
                 deliveredShipments.add(shipment);

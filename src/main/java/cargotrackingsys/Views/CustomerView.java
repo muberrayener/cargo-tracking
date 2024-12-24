@@ -38,7 +38,7 @@ public class CustomerView {
         frame.setLayout(new BorderLayout());
 
         JPanel inputPanel = new JPanel();
-        inputPanel.setLayout(new GridLayout(4, 2));  // 3 rows, 2 columns
+        inputPanel.setLayout(new GridLayout(4, 2));
 
         inputPanel.add(new JLabel("Full Name (First Last):"));
         nameField = new JTextField();
