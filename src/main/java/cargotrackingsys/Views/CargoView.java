@@ -26,6 +26,7 @@ public class CargoView {
     private JComboBox<String> shipmentStatusField;
     private JButton addCargoButton;
     private JButton backButton;
+    private JButton queueButton;
     private JButton findCustomerButton;
     private JList<Shipment> shipmentListArea;
     public LinkedList<Customer> customerList;
@@ -82,6 +83,9 @@ public class CargoView {
 
         findCargoButton = new JButton("Find Cargo");
         panel.add(findCargoButton);
+
+        queueButton = new JButton("Cargo Queue");
+        panel.add(queueButton);
 
 
         shipmentListArea = new JList<>(shipmentListModel);
@@ -168,6 +172,13 @@ public class CargoView {
             @Override
             public void actionPerformed(ActionEvent e) {
                 new SearchFilterView(customerList);
+            }
+        });
+
+        queueButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new QueueView(customerList);
             }
         });
     }

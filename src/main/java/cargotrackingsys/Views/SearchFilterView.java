@@ -38,10 +38,10 @@ public class SearchFilterView {
         cargoNameField = new JTextField();
         sortUndeliveredCargoButton = new JButton("Sort NonDelivered Cargos");
         undeliveredCargoAreaLabel = new JLabel("Undelivered Cargo Id");
-        undeliveredCargoArea = new JTextArea();
-        undeliveredCargoArea.setPreferredSize(new Dimension(600, 300));
-        JScrollPane scrollPane = new JScrollPane(undeliveredCargoArea);
+        undeliveredCargoArea = new JTextArea(3,1);
         undeliveredCargoArea.setEditable(false);
+
+        JScrollPane scrollPane = new JScrollPane(undeliveredCargoArea);
 
         frame.add(deliveredCargoIdLabel);
         frame.add(deliveredCargoIdField);
